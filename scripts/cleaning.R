@@ -1,4 +1,4 @@
-# script to read .conllu and metadata files from the ParlaMint.ana 2.0 data for Poland for 2019 and 2020
+# script to read .conllu and metadata files from the ParlaMint.ana 2.0 data
 
 
 # 1. Setup -----------
@@ -7,24 +7,34 @@ library(tidytext) # for tidy text analysis
 library(udpipe) # for reading conllu files
 
 
+# set country used in the data file names (ISO2-character country code)
+country <- "lt"
+
+# path to folder (may need adjusting)
+path <- paste0("data/ParlaMint-", country, ".conllu")
+
+
 # 2. Metadata files ----------------
 
 ## 2020
 
-# path to folder
-path <- "data/ParlaMint-PL.conllu"
+# list files from path and subfolders
 temp <- list.files(path = path, pattern = ".tsv$", recursive = TRUE)
+#keep only files where names include 2020
 temp <- temp[grepl("2020", temp)]
-
+# create file paths
 f <- file.path(path, temp)
 
+# read the from all files to a list
 meta <- lapply(f, read.delim, stringsAsFactors = FALSE, colClasses = "character", encoding = "UTF-8")
 
+# combine rows of the list into a data frame
 meta2020 <- bind_rows(meta) %>%
-  # https://pl.wikipedia.org/wiki/Waldemar_Bonkowski
+  # in Poland, one MP has no birth year https://pl.wikipedia.org/wiki/Waldemar_Bonkowski
   mutate(Speaker_birth = ifelse(Speaker_name == "Bonkowski, Waldemar", 1959, Speaker_birth))
 
-saveRDS(meta2020, "data/ParlaMint-PL.conllu/cleaned/metadata2020.rds")
+# save to file
+saveRDS(meta2020, paste0("data/cleaned/metadata2020-", country, ".rds"))
 
 
 ## 2019
@@ -34,12 +44,10 @@ temp <- list.files(path = path, pattern = ".tsv$", recursive = TRUE)
 temp <- temp[grepl("2019", temp)]
 
 f <- file.path(path, temp)
-
 meta <- lapply(f, read.delim, stringsAsFactors = FALSE, colClasses = "character", encoding = "UTF-8")
-
 meta2019 <- bind_rows(meta)
 
-saveRDS(meta2019, "data/ParlaMint-PL.conllu/cleaned/metadata2019.rds")
+saveRDS(meta2019, paste0("data/cleaned/metadata2019-", country, ".rds"))
 
 
 # 2. conllu files ----------------
@@ -48,34 +56,30 @@ saveRDS(meta2019, "data/ParlaMint-PL.conllu/cleaned/metadata2019.rds")
 
 temp <- list.files(path = path, pattern = ".conllu$", recursive = TRUE)
 temp <- temp[grepl("2020", temp)]
-
 f <- file.path(path, temp)
 
-pl_conllu <- lapply(f, udpipe_read_conllu)
-
-conllu2020 <- bind_rows(pl_conllu) %>% 
+conllu <- lapply(f, udpipe_read_conllu)
+conllu2020 <- bind_rows(conllu) %>% 
   left_join(meta2020, by = c("doc_id" = "ID"))
 
-saveRDS(conllu2020, "data/ParlaMint-PL.conllu/cleaned/conllu2020.rds")
+saveRDS(conllu2020, paste0("data/cleaned/conllu2020-", country, ".rds"))
 
 
 # 2019
 
 temp <- list.files(path = path, pattern = ".conllu$", recursive = TRUE)
 temp <- temp[grepl("2019", temp)]
-
 f <- file.path(path, temp)
 
-pl_conllu <- lapply(f, udpipe_read_conllu)
-
-conllu2019 <- bind_rows(pl_conllu) %>% 
+conllu <- lapply(f, udpipe_read_conllu)
+conllu2019 <- bind_rows(conllu) %>% 
   left_join(meta2019, by = c("doc_id" = "ID"))
 
-saveRDS(conllu2019, "data/ParlaMint-PL.conllu/cleaned/conllu2019.rds")
+saveRDS(conllu2019, paste0("data/cleaned/conllu2019-", country, ".rds"))
 
 
 
-# 3. Subsets -----------------
+# 3. Subset examples -----------------
 
 # only regular MPs (excluding chairpersons and guests) and without punctuation
 conllu2020_subset <- conllu2020 %>%
@@ -83,5 +87,22 @@ conllu2020_subset <- conllu2020 %>%
          Speaker_type == "MP",
          upos != "PUNCT")
 
-# this reduced the number of tokens by 47%
-1 - nrow(conllu2020_subset) / nrow(conllu2020)
+# stopwords
+stopwords <- read.delim(paste0("https://raw.githubusercontent.com/stopwords-iso/stopwords-", country, "/master/stopwords-", country, ".txt"), 
+                        header = FALSE,
+                        stringsAsFactors = FALSE,
+                        col.names = "word",
+                        encoding = "UTF-8")
+
+# keep only regular MPs, exclude punctuation, symbols, numbers, and stopwords
+conllu2020_subset2 <- conllu2020 %>%
+  mutate(token_lc = tolower(token)) %>%
+  filter(Speaker_role == "Regular",
+         Speaker_type == "MP",
+         !upos %in% c("PUNCT", "SYM", "X"),
+         !token_lc %in% stopwords$word)
+
+
+nrow(conllu2020)
+nrow(conllu2020_subset)
+nrow(conllu2020_subset2)
