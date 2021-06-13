@@ -8,11 +8,14 @@ library(udpipe) # for reading conllu files
 
 
 # set country used in the data file names (ISO2-character country code)
-country <- "lt"
+country <- "dk"
+
+# set language to get stopwords list
+# pl = Polish; lt = Lithuanian; sl = Slovene; cs = Czech; nl = Dutch, Flemish; da = Danish
+language <- "da"
 
 # path to folder (may need adjusting)
 path <- paste0("data/ParlaMint-", country, ".conllu")
-
 
 # 2. Metadata files ----------------
 
@@ -48,6 +51,8 @@ meta <- lapply(f, read.delim, stringsAsFactors = FALSE, colClasses = "character"
 meta2019 <- bind_rows(meta)
 
 saveRDS(meta2019, paste0("data/cleaned/metadata2019-", country, ".rds"))
+
+
 
 
 # 2. conllu files ----------------
@@ -87,8 +92,14 @@ conllu2020_subset <- conllu2020 %>%
          Speaker_type == "MP",
          upos != "PUNCT")
 
+
+
 # stopwords
-stopwords <- read.delim(paste0("https://raw.githubusercontent.com/stopwords-iso/stopwords-", country, "/master/stopwords-", country, ".txt"), 
+stopwords <- read.delim(paste0("https://raw.githubusercontent.com/stopwords-iso/stopwords-", 
+                               language, 
+                               "/master/stopwords-", 
+                               language, 
+                               ".txt"), 
                         header = FALSE,
                         stringsAsFactors = FALSE,
                         col.names = "word",
@@ -99,7 +110,7 @@ conllu2020_subset2 <- conllu2020 %>%
   mutate(token_lc = tolower(token)) %>%
   filter(Speaker_role == "Regular",
          Speaker_type == "MP",
-         !upos %in% c("PUNCT", "SYM", "X"),
+         !upos %in% c("PUNCT", "SYM", "X", "NUM"),
          !token_lc %in% stopwords$word)
 
 
