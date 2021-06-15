@@ -10,9 +10,18 @@ library(udpipe) # for reading conllu files
 # set country used in the data file names (ISO2-character country code)
 country <- "dk"
 
-# set language to get stopwords list
+# set language to get stopwords list (https://github.com/stopwords-iso/stopwords-iso)
 # pl = Polish; lt = Lithuanian; sl = Slovene; cs = Czech; nl = Dutch, Flemish; da = Danish
-language <- "da"
+
+language <- case_when(
+  country == "cz" ~ "cs",
+  country == "dk" ~ "da",
+  country == "gb" ~ "en",
+  country == "nl" ~ "nl",
+  country == "lt" ~ "lt",
+  country == "pl" ~ "pl",
+  country == "si" ~ "sl"
+)
 
 # path to folder (may need adjusting)
 path <- paste0("data/ParlaMint-", country, ".conllu")
