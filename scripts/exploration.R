@@ -124,9 +124,9 @@ conllu_subset1 %>%
           !grepl(";|Prawo", Speaker_party),
           !Speaker_party %in% c("-", "Teraz!")) %>%
   mutate(month = substr(From, 6, 7),
-         month = sub("^0", "", month),
-         month = as.numeric(month),
-         month = month(ymd(010101) + months(month-1), label=TRUE, abbr=TRUE),
+         # month = sub("^0", "", month),
+         # month = as.numeric(month),
+         # month = month(ymd(010101) + months(month-1), label=TRUE, abbr=TRUE),
          year = substr(From, 1,4),
          Speaker_party = factor(Speaker_party,
                                 c("PiS", "KO", "Lewica", "KP-PSL", "Kukiz'15", 
@@ -139,7 +139,7 @@ conllu_subset1 %>%
   ylab("Words (in 100 thousand)") + xlab("") +
   labs(title = "Number of words spoken by regular MPs per month by party",
        caption = "Note: Excludes punctuation and numbers.
-       Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0. http://hdl.handle.net/11356/1405") +
+       Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1. https://www.clarin.si/repository/xmlui/handle/11356/1431") +
   facet_wrap("year", ncol = 1)
 
 ggsave("plots/parties_words.png", width = 10, height = 5, units = "in")
@@ -151,9 +151,9 @@ conllu_subset1 %>%
           !Speaker_party %in% c("-", "Teraz!")) %>%
   count(From, doc_id, Speaker_name, Speaker_party, Party_status, Term) %>%
   mutate(month = substr(From, 6, 7),
-         month = sub("^0", "", month),
-         month = as.numeric(month),
-         month = month(ymd(010101) + months(month-1), label=TRUE, abbr=TRUE),
+         # month = sub("^0", "", month),
+         # month = as.numeric(month),
+         # month = month(ymd(010101) + months(month-1), label=TRUE, abbr=TRUE),
          year = substr(From, 1,4),
          Speaker_party = factor(Speaker_party,
                                 c("PiS", "KO", "Lewica", "KP-PSL", "Kukiz'15", 
@@ -165,7 +165,7 @@ conllu_subset1 %>%
   scale_fill_brewer(name = "Party", palette = "Paired") +
   ylab("Speeches") + xlab("") +
   labs(title = "Number of speeches by regular MPs per month by party",
-       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0. http://hdl.handle.net/11356/1405") +
+       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1. http://hdl.handle.net/11356/1431") +
   facet_wrap("year", ncol = 1)
 
 ggsave("plots/parties_speeches.png", width = 10, height = 5, units = "in")
@@ -175,9 +175,9 @@ conllu_subset1 %>%
   filter( !grepl(";|Prawo", Speaker_party),
           !Speaker_party %in% c("-", "Teraz!")) %>%
   mutate(month = substr(From, 6, 7),
-         month = sub("^0", "", month),
-         month = as.numeric(month),
-         month = month(ymd(010101) + months(month-1), label=TRUE, abbr=TRUE),
+         # month = sub("^0", "", month),
+         # month = as.numeric(month),
+         # month = month(ymd(010101) + months(month-1), label=TRUE, abbr=TRUE),
          year = substr(From, 1,4),
          Speaker_party = factor(Speaker_party,
                                 c("PiS", "KO", "Lewica", "KP-PSL", "Kukiz'15", 
@@ -190,7 +190,7 @@ conllu_subset1 %>%
   scale_fill_brewer(name = "Party", palette = "Paired") +
   ylab("Speakers") + xlab("") +
   labs(title = "Number of speakers (regular MPs) per month by party",
-       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0. http://hdl.handle.net/11356/1405") +
+       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1. http://hdl.handle.net/11356/1431") +
   facet_wrap("year", ncol = 1)
 
 ggsave("plots/parties_speakers.png", width = 10, height = 5, units = "in")
@@ -294,7 +294,7 @@ tg %>%
   theme(legend.position = "none") +
   labs(title = "Collocations for 'koronawirus' in the COVID subcorpus",
        subtitle = "Poland, 2020",
-       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0. http://hdl.handle.net/11356/1405")
+       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1. http://hdl.handle.net/11356/1431")
 
 ggsave("plots/network_koronawirus1.png", width = 10, height = 7, units = "in")
 
@@ -347,7 +347,7 @@ tg %>%
   theme(legend.position = "none") +
   labs(title = "Collocation networks around 'koronawirus' in the COVID subcorpus",
        subtitle = "Poland, 2020",
-       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0. http://hdl.handle.net/11356/1405")
+       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1. http://hdl.handle.net/11356/1431")
 
 ggsave("plots/network_koronawirus2.png", width = 10, height = 7, units = "in")
 
@@ -391,36 +391,7 @@ coll_monthly_df_koronawirus %>%
 # 8. Timeline graphs ----------------
 
 conllu_subset1 %>%
-  filter(Party_status != "-",
-         as.numeric(substr(From, 1,4)) == 2020) %>%
-  mutate(covid_terms = ifelse(lemma_lc %in% c("covid", "koronawirus", "epidemia", "pandemia"), 1, 0),
-         week = week(From),
-         date = ymd( "2020-01-01" ) + weeks(week - 1)) %>%
-  group_by(Party_status, date) %>%
-  summarise(sum_covid = sum(covid_terms),
-            sum_all = n()) %>%
-  group_by(date) %>%
-  mutate(prop_covid = sum_covid / sum(sum_all)) %>%
-  ggplot(., aes(x = date, y = prop_covid, fill = Party_status)) +
-  geom_bar(stat = "Identity", position = "dodge") +
-  scale_x_date(date_breaks = "2 weeks", date_labels = "%b-%d") +
-  scale_fill_brewer(name = "", palette = "Paired") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ylab("Relative frequency") + xlab("") +
-  labs(title = "Relative frequency of 'koronawirus', 'covid', 'pandemia' and 'epidemia' 
-       in speeches by coalition and opposition parties",
-       subtitle = "Poland, 2020",
-       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0. http://hdl.handle.net/11356/1405")
-
-ggsave("plots/timeline_gov_opp.png", width = 10, height = 4, units = "in")
-
-
-
-
-conllu_subset1 %>%
-  filter(Party_status != "-",
-         as.numeric(substr(From, 1,4)) == 2020) %>%
+  filter(as.numeric(substr(From, 1,4)) == 2020) %>%
   mutate(covid_term = ifelse(lemma_lc %in% c("covid", "koronawirus", "epidemia", "pandemia"), lemma_lc, NA),
          covid_term = factor(covid_term, levels = c("covid", "koronawirus", "epidemia", "pandemia")),
          week = week(From),
@@ -432,14 +403,39 @@ conllu_subset1 %>%
   drop_na(covid_term) %>%
   ggplot(., aes(x = date, y = prop_term, fill = covid_term)) +
   geom_bar(stat = "Identity", position = "stack") +
-  scale_x_date(date_breaks = "2 weeks", date_labels = "%b-%d") +
+  scale_x_date(date_breaks = "2 weeks", date_labels = "%m-%d") +
   scale_fill_brewer(name = "", palette = "Paired") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90)) +
   ylab("Relative frequency") + xlab("") +
   labs(title = "Relative frequency of 'koronawirus', 'covid', 'pandemia' and 'epidemia'",
        subtitle = "Poland, 2020",
-       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0. http://hdl.handle.net/11356/1405")
+       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1. http://hdl.handle.net/11356/1431")
 
 ggsave("plots/timeline_4words.png", width = 10, height = 4, units = "in")
 
+
+conllu_subset1 %>%
+  filter(Party_status != "",
+         as.numeric(substr(From, 1,4)) == 2020) %>%
+  mutate(covid_terms = ifelse(lemma_lc %in% c("covid", "koronawirus", "epidemia", "pandemia"), 1, 0),
+         week = week(From),
+         date = ymd( "2020-01-01" ) + weeks(week - 1)) %>%
+  group_by(Party_status, date) %>%
+  summarise(sum_covid = sum(covid_terms),
+            sum_all = n()) %>%
+  group_by(date) %>%
+  mutate(prop_covid = sum_covid / sum(sum_all)) %>%
+  ggplot(., aes(x = date, y = prop_covid, fill = Party_status)) +
+  geom_bar(stat = "Identity", position = "dodge") +
+  scale_x_date(date_breaks = "2 weeks", date_labels = "%m-%d") +
+  scale_fill_brewer(name = "", palette = "Paired") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Relative frequency") + xlab("") +
+  labs(title = "Relative frequency of 'koronawirus', 'covid', 'pandemia' and 'epidemia' 
+       in speeches by coalition and opposition parties",
+       subtitle = "Poland, 2020",
+       caption = "Data source: Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1. http://hdl.handle.net/11356/1431")
+
+ggsave("plots/timeline_gov_opp.png", width = 10, height = 4, units = "in")
