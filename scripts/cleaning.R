@@ -8,7 +8,7 @@ library(udpipe) # for reading conllu files
 
 
 # set country used in the data file names (ISO2-character country code)
-country <- "dk"
+country <- "pl"
 
 # set language to get stopwords list (https://github.com/stopwords-iso/stopwords-iso)
 # pl = Polish; lt = Lithuanian; sl = Slovene; cs = Czech; nl = Dutch, Flemish; da = Danish
@@ -43,7 +43,12 @@ meta <- lapply(f, read.delim, stringsAsFactors = FALSE, colClasses = "character"
 # combine rows of the list into a data frame
 meta2020 <- bind_rows(meta) %>%
   # in Poland, one MP has no birth year https://pl.wikipedia.org/wiki/Waldemar_Bonkowski
-  mutate(Speaker_birth = ifelse(Speaker_name == "Bonkowski, Waldemar", 1959, Speaker_birth))
+  mutate(Speaker_birth = ifelse(country == "pl" & Speaker_name == "Bonkowski, Waldemar", 1959, Speaker_birth),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Tarczyński, Dominik", "PiS", Speaker_party)) %>%
+  group_by(Speaker_party) %>%
+  mutate(Speaker_party_name = ifelse(Speaker_party_name == "", max(Speaker_party_name), Speaker_party_name),
+         Party_status = ifelse(Party_status == "", max(Party_status), Party_status)) %>%
+  ungroup()
 
 # save to file
 saveRDS(meta2020, paste0("data/cleaned/metadata2020-", country, ".rds"))
@@ -57,7 +62,27 @@ temp <- temp[grepl("2019", temp)]
 
 f <- file.path(path, temp)
 meta <- lapply(f, read.delim, stringsAsFactors = FALSE, colClasses = "character", encoding = "UTF-8")
-meta2019 <- bind_rows(meta)
+meta2019 <- bind_rows(meta) %>%
+  # in Poland, one MP has no birth year https://pl.wikipedia.org/wiki/Waldemar_Bonkowski
+  mutate(Speaker_party = ifelse(country == "pl" & Speaker_name == "Arłukowicz, Bartosz", "KO", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Brudziński, Joachim", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Dajczak, Władysław", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Halicki, Andrzej", "KO", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Kloc, Izabela", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Kopacz, Ewa", "KO", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Kruk, Elżbieta", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Mazurek, Beata", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Możdżanowska, Andżelika", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Rzońca, Bogdan", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Strzałkowski, Stefan", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Szydło, Beata", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Szyszko, Jan", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Tarczyński, Dominik", "PiS", Speaker_party),
+         Speaker_party = ifelse(country == "pl" & Speaker_name == "Waszczykowski, Witold", "PiS", Speaker_party)) %>%
+  group_by(Speaker_party) %>%
+  mutate(Speaker_party_name = ifelse(Speaker_party_name == "", max(Speaker_party_name), Speaker_party_name),
+         Party_status = ifelse(Party_status == "", max(Party_status), Party_status)) %>%
+  ungroup()
 
 saveRDS(meta2019, paste0("data/cleaned/metadata2019-", country, ".rds"))
 
