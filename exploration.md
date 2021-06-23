@@ -58,7 +58,7 @@ Collocations are sets of words that commonly co-occur. Examining them can tell s
 
 ## Collocations over time
 
-Below are top collocates of the word 'koronawirus' in each month from February until August 2020. The word 'epidemic' was among the top collocates throughout this period, while 'pandemic' joined in March. In each month the word 'walka' (fight) has been frequently associated with 'coronavirus'. 'Krysys' (crisis) became a top collocate in July and August. Other words in the table refer to infections (zarazić, zakazić, zakażenie), cases (przypadek), fight (walczyć, verb), COVID-19 and Sars-cov-2. Vaccine (szczepionka) shows up only once, in May.
+Below are top collocates of the word 'koronawirus' in each month from February until August 2020. The word 'epidemic' was among the top collocates throughout this period, while 'pandemic' joined in March. In each month the word 'walka' (fight) has been frequently associated with 'coronavirus'. 'Kryzys' (crisis) became a top collocate in July and August. Other words in the table refer to infections (zarazić, zakazić, zakażenie), cases (przypadek), fight (walczyć, verb), COVID-19 and Sars-cov-2. Vaccine (szczepionka) shows up only once, in May.
 
 ![Collocations of koronawirus by month](plots/collocations_months.png)
 
