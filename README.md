@@ -1,10 +1,10 @@
 # ParlaMint
-Playing with parliamentary corpora with data from the [Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.0](https://www.clarin.si/repository/xmlui/handle/11356/1405)
+Playing with parliamentary corpora with data from the [Linguistically annotated multilingual comparable corpora of parliamentary debates ParlaMint.ana 2.1](https://www.clarin.si/repository/xmlui/handle/11356/1431)
 
 
 ## Getting the data
 
-The linguistically annotated data can be downloaded [here](https://www.clarin.si/repository/xmlui/handle/11356/1405) (the text version is available [here](http://hdl.handle.net/11356/1388)).
+The linguistically annotated data can be downloaded [here](https://www.clarin.si/repository/xmlui/handle/11356/1431).
 
 As stated in the data description:
 
