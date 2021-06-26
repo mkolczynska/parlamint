@@ -24,6 +24,21 @@ To extract only selected files from the .tgz file, e.g. in this case only *.conl
 
 `tar -xzf ParlaMint-PL.ana.tgz --wildcards --no-anchored '*.conllu'`
 
+## Citing the data
+
+The proper citation is as follows:
+
+```
+@misc{11356/1431,
+  title = {Linguistically annotated multilingual comparable corpora of parliamentary debates {ParlaMint}.ana 2.1},
+  author = {Erjavec, Toma{\v z} and Ogrodniczuk, Maciej and Osenova, Petya and Ljube{\v s}i{\'c}, Nikola and Simov, Kiril and Grigorova, Vladislava and Rudolf, Micha{\l} and Pan{\v c}ur, Andrej and Kopp, Maty{\'a}{\v s} and Barkarson, Starkaður and Steingr{\'{\i}}msson, Stein{\t h}{\'o}r and van der Pol, Henk and Depoorter, Griet and de Does, Jesse and Jongejan, Bart and Haltrup Hansen, Dorte and Navarretta, Costanza and Calzada P{\'e}rez, Mar{\'{\i}}a and de Macedo, Luciana D. and van Heusden, Ruben and Marx, Maarten and {\c C}{\"o}ltekin, {\c C}a{\u g}r{\i} and Coole, Matthew and Agnoloni, Tommaso and Frontini, Francesca and Montemagni, Simonetta and Quochi, Valeria and Venturi, Giulia and Ruisi, Manuela and Marchetti, Carlo and Battistoni, Roberto and Seb{\H o}k, Mikl{\'o}s and Ring, Orsolya and Darģis, Roberts and Utka, Andrius and Petkevi{\v c}ius, Mindaugas and Briedien{\.e}, Monika and Krilavi{\v c}ius, Tomas and Morkevi{\v c}ius, Vaidas and Bartolini, Roberto and Cimino, Andrea and Diwersy, Sascha and Luxardo, Giancarlo and Rayson, Paul},
+  url = {http://hdl.handle.net/11356/1431},
+  note = {Slovenian language resource repository {CLARIN}.{SI}},
+  copyright = {Creative Commons - Attribution 4.0 International ({CC} {BY} 4.0)},
+  year = {2021}
+}
+```
+
 ## Using the data
 
 CoNLL-U files can be conveniently read as data frames by the `udpipe_read_conllu` command of the [`udpipe`](https://CRAN.R-project.org/package=udpipe) package.
