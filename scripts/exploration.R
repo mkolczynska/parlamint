@@ -23,9 +23,10 @@ country <- "pl"
 language <- case_when(
   country == "cz" ~ "cs",
   country == "dk" ~ "da",
+  country == "fr" ~ "fr",
   country == "gb" ~ "en",
-  country == "nl" ~ "nl",
   country == "lt" ~ "lt",
+  country == "nl" ~ "nl",
   country == "pl" ~ "pl",
   country == "si" ~ "sl"
 )

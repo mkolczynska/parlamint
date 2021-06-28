@@ -8,7 +8,7 @@ library(udpipe) # for reading conllu files
 
 
 # set country used in the data file names (ISO2-character country code)
-country <- "pl"
+country <- "gb"
 
 # set language to get stopwords list (https://github.com/stopwords-iso/stopwords-iso)
 # pl = Polish; lt = Lithuanian; sl = Slovene; cs = Czech; nl = Dutch, Flemish; da = Danish
@@ -16,9 +16,10 @@ country <- "pl"
 language <- case_when(
   country == "cz" ~ "cs",
   country == "dk" ~ "da",
+  country == "fr" ~ "fr",
   country == "gb" ~ "en",
-  country == "nl" ~ "nl",
   country == "lt" ~ "lt",
+  country == "nl" ~ "nl",
   country == "pl" ~ "pl",
   country == "si" ~ "sl"
 )
